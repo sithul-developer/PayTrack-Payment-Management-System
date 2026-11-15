@@ -7,9 +7,8 @@
     <title>Meul-louy</title>
     <style>
         /* ============================================
-           BRAND COLOR TOKENS
+           BRAND COLOR TOKENS — GREEN ONLY
            Primary: Emerald Green  #007B5F
-           Accent:  Warm Gold      #F1BE48
            ============================================ */
         :root {
             /* Primary brand — emerald green */
@@ -18,10 +17,10 @@
             --brand-green-light:  #1A9B7C;
             --brand-green-soft:   #E3F2ED;
 
-            /* Accent brand — warm gold */
-            --brand-gold:         #F1BE48;
-            --brand-gold-dark:    #D9A62E;
-            --brand-gold-light:   #F9DB92;
+            /* Aliases used by the boot loader */
+            --bg:                 #F4F8F6;
+            --border:             #DCE8E3;
+            --ptms-primary:       #007B5F;
 
             /* Neutrals */
             --bg-page:            #F4F8F6;
@@ -31,9 +30,8 @@
             --text-secondary:     #4A7A6B;
             --text-muted:         #8AA79C;
 
-            /* Gradients */
+            /* Gradients — green only */
             --brand-gradient:     linear-gradient(135deg, #007B5F 0%, #1A9B7C 100%);
-            --accent-gradient:    linear-gradient(135deg, #F1BE48 0%, #F9DB92 100%);
         }
 
         * {
@@ -66,171 +64,75 @@
         }
 
         /* ============================================
-           LOADING SCREEN — BRANDED
+           BOOT LOADER — GREEN ONLY
            ============================================ */
-        .loader {
-            position: absolute;
+        #bootLoader {
+            position: fixed;
             inset: 0;
+            background: var(--bg);
+            z-index: 9999;
             display: flex;
             flex-direction: column;
             align-items: center;
             justify-content: center;
-            background: radial-gradient(circle at 50% 40%, #FFFFFF 0%, var(--bg-page) 70%);
-            gap: 22px;
-            z-index: 10;
-            transition: opacity 0.4s ease;
+            transition: opacity 0.3s ease;
         }
 
-        .loader.hidden {
+        #bootLoader.hidden {
             opacity: 0;
             pointer-events: none;
         }
 
-        /* Brand logo mark — green ring with gold "M" */
-        .loader-logo {
-            position: relative;
-            width: 72px;
-            height: 72px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-
-        .loader-logo::before {
-            content: "";
-            position: absolute;
-            inset: 0;
+        .boot-spinner {
+            width: 40px;
+            height: 40px;
+            border: 3px solid var(--border);
+            border-top-color: var(--ptms-primary);
             border-radius: 50%;
-            background: var(--brand-gradient);
-            box-shadow: 0 8px 24px rgba(0, 123, 95, 0.35);
-        }
-
-        .loader-logo::after {
-            content: "M";
-            position: relative;
-            font-size: 30px;
-            font-weight: 800;
-            color: var(--brand-gold);
-            letter-spacing: -1px;
-            text-shadow: 0 1px 2px rgba(0, 0, 0, 0.15);
-        }
-
-        /* Spinner ring around logo — green + gold */
-        .loader-spinner {
-            position: absolute;
-            inset: -10px;
-            border-radius: 50%;
-            border: 3px solid transparent;
-            border-top-color: var(--brand-gold);
-            border-right-color: var(--brand-green);
-            animation: spin 1s linear infinite;
+            animation: spin 0.8s linear infinite;
+            margin-bottom: 16px;
         }
 
         @keyframes spin {
-            0%   { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
-        }
-
-        .loader-text {
-            color: var(--text-secondary);
-            font-size: 15px;
-            font-weight: 500;
-            letter-spacing: 0.3px;
-        }
-
-        .loader-text strong {
-            color: var(--brand-green-dark);
-            font-weight: 700;
-        }
-
-        /* Subtle pulsing dots */
-        .loader-dots {
-            display: flex;
-            gap: 6px;
-            margin-top: 4px;
-        }
-
-        .loader-dots span {
-            width: 6px;
-            height: 6px;
-            border-radius: 50%;
-            background: var(--brand-green);
-            animation: pulse 1.2s ease-in-out infinite;
-        }
-
-        .loader-dots span:nth-child(2) { animation-delay: 0.15s; background: var(--brand-green-light); }
-        .loader-dots span:nth-child(3) { animation-delay: 0.30s; background: var(--brand-gold); }
-
-        @keyframes pulse {
-            0%, 100% { opacity: 0.3; transform: scale(0.8); }
-            50%      { opacity: 1;   transform: scale(1.1); }
-        }
-
-        /* Thin brand progress bar at top — green to gold */
-        .loader-bar {
-            position: absolute;
-            top: 0;
-            left: 0;
-            height: 3px;
-            width: 40%;
-            background: linear-gradient(90deg, var(--brand-green) 0%, var(--brand-gold) 100%);
-            border-radius: 0 3px 3px 0;
-            animation: barSlide 1.6s ease-in-out infinite;
-        }
-
-        @keyframes barSlide {
-            0%   { width: 5%;  left: 0; }
-            50%  { width: 60%; left: 20%; }
-            100% { width: 5%;  left: 95%; }
+            to { transform: rotate(360deg); }
         }
     </style>
 </head>
 <body>
 
     <div class="fullscreen-wrapper">
-
-        <!-- ✅ Branded loading screen -->
-        <div id="loader" class="loader">
-            <div class="loader-bar"></div>
-
-            <div class="loader-logo">
-                <div class="loader-spinner"></div>
-            </div>
-
-            <div class="loader-text">Loading <strong>Meul-louy</strong> …</div>
-
-            <div class="loader-dots">
-                <span></span><span></span><span></span>
-            </div>
-        </div>
-
         <iframe
             id="surveyFrame"
             class="fullscreen-iframe"
-            src="https://script.google.com/macros/s/AKfycbzInxFvayCwa5_4zen4y5Z5UwIp_PjhRYTE-NHjjW5z8b1S_XPpAkZD8a7tnu4_9Kga/exec"
+            src="https://meul-louy.vercel.app/"
             allow="geolocation; camera; microphone; fullscreen"
             allowfullscreen
             referrerpolicy="no-referrer-when-downgrade">
         </iframe>
+    </div>
 
+    <!-- ✅ Boot loader overlay -->
+    <div id="bootLoader">
+        <div class="boot-spinner"></div>
+        <div style="font-size:14px;font-weight:600;color:var(--text-muted)">Authenticating...</div>
     </div>
 
     <script>
         (function() {
             const frame = document.getElementById('surveyFrame');
-            const loader = document.getElementById('loader');
+            const bootLoader = document.getElementById('bootLoader');
 
             let hidden = false;
             function hideLoader() {
                 if (hidden) return;
                 hidden = true;
-                loader.classList.add('hidden');
-                setTimeout(() => loader.remove(), 500);
+                bootLoader.classList.add('hidden');
+                setTimeout(() => bootLoader.remove(), 400);
             }
 
             frame.addEventListener('load', hideLoader);
 
-            // Safety fallback
+            // Safety fallback — hide loader after 6 seconds max
             setTimeout(hideLoader, 6000);
         })();
     </script>
